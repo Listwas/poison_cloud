@@ -1,6 +1,10 @@
 import styles from "./Logo.module.css";
-
+import logo from "../../../public/logo.png";
 function Logo() {
-  return <h1>123123</h1>;
+  return (
+    <figure>
+      <img src={logo} alt="logo_image"></img>
+    </figure>
+  );
 }
 export default Logo;
