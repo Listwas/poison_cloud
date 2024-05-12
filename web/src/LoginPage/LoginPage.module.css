@@ -1,0 +1,55 @@
+.logForm {
+    padding-top: 10%;   
+}
+.contLogin {
+    margin-left:38vw;
+    margin-top: 18vh;
+    text-align: center;
+    width: 24vw;
+    height: 34vh;
+    border: 1px solid;
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    border-radius: 5px;
+    border-color: #5eff1f;
+    min-width: 280px;
+    min-height: 220px;
+    
+}
+
+.logInput {
+    color: #555;
+    margin: 0.5vh;
+    text-align: center;
+    font-size: 20px;
+}
+
+.logH2 {
+    color: #555;
+    margin: 0;
+}
+
+.logInput[type=text] {
+    background-color: #2b2a2a;
+    width: 60%;
+    height: 30px;
+    size: 5vh;
+    border: 3px solid #555;
+    border-radius: 10px;
+}
+.logInput[type=text]:focus {
+    border: 3px solid #555;
+}
+
+.logInput[type=button] {
+    border: 3px solid #555;
+    color: black;
+    width: 30%;
+    background-color: #5eff1f;
+    margin-top: 15px;
+    border-radius: 10px;
+}
+.logInput[type=button]:hover {
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    color: black;
+    background-color: #1a5204;
+}
