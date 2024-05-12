@@ -11,7 +11,7 @@
     box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     border-radius: 5px;
     border-color: #5eff1f;
-    min-width: 320px;
+    min-width: 340px;
     min-height: 280px;
     
 }
@@ -26,9 +26,10 @@
 .logH2 {
     color: #555;
     margin: 0;
+    padding-top: 2vh;
 }
 
-.logInput[type=text] {
+.logInput[type=text], .logInput[type=password]{
     background-color: #2b2a2a;
     width: 60%;
     height: 30px;
@@ -40,7 +41,7 @@
     border: 3px solid #555;
 }
 
-.logInput[type=button] {
+.logInput[type=button], .logInput[type=submit] {
     border: 3px solid #555;
     color: black;
     width: 30%;
@@ -48,7 +49,7 @@
     margin-top: 15px;
     border-radius: 10px;
 }
-.logInput[type=button]:hover {
+.logInput[type=button]:hover, .logInput[type=submit]:hover {
     box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     color: black;
     background-color: #1a5204;

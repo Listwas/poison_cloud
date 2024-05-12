@@ -28,7 +28,7 @@
     margin: 0;
 }
 
-.logInput[type=text] {
+.logInput[type=text], .logInput[type=password] {
     background-color: #2b2a2a;
     width: 60%;
     height: 30px;
