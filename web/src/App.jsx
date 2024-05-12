@@ -1,11 +1,14 @@
 import "./App.css";
 import MainPage from "./MainPage/MainPage";
+import LoginPage from "./LoginPage/LoginPage";
 
 function App() {
   if (true) {
-    <>
-      <LoginPage />
-    </>;
+    return(
+      <>
+        <LoginPage />
+      </>
+    )  ;
   }
 
   return (
