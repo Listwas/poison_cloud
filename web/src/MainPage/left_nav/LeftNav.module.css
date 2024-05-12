@@ -18,7 +18,7 @@ a {
   font-size: 1.4rem;
   text-align: center;
   text-decoration: solid;
-  border-radius: 7px;
+  border-radius: 8px;
   color: black;
   background-color: rgba(81, 255, 0, 0.453);
 }
@@ -27,6 +27,22 @@ a:hover {
   background-color: rgba(30, 255, 0, 0.764);
 }
 .used_space {
-  min-height: 30vh;
+  min-height: 40vh;
   padding: 6%;
+  margin-top: 3%;
+  border-radius: 8px;
+  background-color: hsla(0, 100%, 50%, 0.119);
+}
+.trash_can {
+  float: left;
+  background-color: hsla(0, 100%, 50%, 0.405);
+}
+.trash_can:hover {
+  background-color: hsl(0, 100%, 50%);
+}
+
+.separator {
+  min-width: 50%;
+  float: left;
+  margin-bottom: 10%;
 }

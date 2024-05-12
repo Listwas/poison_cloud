@@ -11,10 +11,12 @@ function LeftNav() {
         </nav>
       </div>
       <div className={styles.used_space}>
-        <h2>used space: </h2>
-        <hr></hr>
+        <h2>used space: 0GB/5GB</h2>
+        <hr className={styles.separator}></hr>
         <br></br>
-        <a href="url">trash can</a>
+        <a href="url" className={styles.trash_can}>
+          trash can
+        </a>
       </div>
     </>
   );
