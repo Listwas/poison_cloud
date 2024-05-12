@@ -1,11 +1,16 @@
 import "./App.css";
-import Left_nav from "./left_nav/Left_nav";
-import Logo from "./logo/Logo.jsx";
 function App() {
+  if (true) {
+    return (
+      <div id="main_container">
+        <LoginPage />
+      </div>
+    );
+  }
+
   return (
     <div id="main_container">
-      <Logo />
-      <Left_nav />
+      <MainPage />
     </div>
   );
 }
