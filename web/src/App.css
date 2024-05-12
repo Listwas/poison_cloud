@@ -1,0 +1,15 @@
+html {
+  background-color: #1f1f1f;
+}
+
+#main_container {
+  width: 99vw;
+  height: 98vh;
+  border: 1px dashed blue;
+}
+
+#left_nav {
+  width: 25vw;
+  height: 60vh;
+  border: 1px solid red;
+}
