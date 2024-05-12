@@ -14,7 +14,7 @@ nav {
 a {
   min-width: 10vw;
   padding: 10px;
-  margin: -5% 0% 15%;
+  margin: -5% 0% 12% 10%;
   font-size: 1.4rem;
   text-align: center;
   text-decoration: solid;
@@ -27,14 +27,17 @@ a:hover {
   background-color: rgba(30, 255, 0, 0.764);
 }
 .used_space {
-  min-height: 40vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-flow: column wrap;
   padding: 6%;
-  margin-top: 3%;
+  margin: 3% 0% 0% 0%;
   border-radius: 8px;
   background-color: hsla(0, 100%, 50%, 0.119);
 }
 .trash_can {
-  float: left;
+  margin: 0px;
   background-color: hsla(0, 100%, 50%, 0.405);
 }
 .trash_can:hover {
@@ -42,7 +45,8 @@ a:hover {
 }
 
 .separator {
+  margin: 0px;
   min-width: 50%;
   float: left;
-  margin-bottom: 10%;
+  margin-bottom: 5%;
 }

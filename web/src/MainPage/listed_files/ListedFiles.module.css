@@ -1,4 +1,7 @@
 .main_container {
   min-height: 75vh;
   margin-top: 5%;
+  margin-left: 2%;
+  font-size: 1.2rem;
+  background-color: hsla(120, 100%, 50%, 0.09);
 }
