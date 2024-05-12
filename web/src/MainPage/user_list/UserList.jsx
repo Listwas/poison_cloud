@@ -5,13 +5,13 @@ function UserList() {
     <>
       <div className={styles.user_list_container}>
         <h1>users: </h1>
-        <ul>
-          <li></li>
-          <li></li>
-          <li></li>
-          <li></li>
-          <li></li>
-        </ul>
+        <div className={styles.list_style}>
+          <ul>
+            <li>sad</li>
+            <li>sa</li>
+            <li>sad</li>
+          </ul>
+        </div>
       </div>
     </>
   );

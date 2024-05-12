@@ -1,2 +1,14 @@
 .user_list_container {
+  display: flex;
+  flex-flow: column wrap;
+  align-items: start;
+  font-size: 1.4rem;
+  min-width: 10vw;
+  color: red;
+}
+.list_style {
+  align-self: flex-end;
+  color: green;
+  margin-top: -20%;
+  font-size: 2rem;
 }

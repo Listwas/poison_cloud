@@ -3,5 +3,12 @@
   margin-top: 5%;
   margin-left: 2%;
   font-size: 1.2rem;
-  background-color: hsla(120, 100%, 50%, 0.09);
+  padding-left: 3%;
+  padding-top: 1px;
+  border-radius: 15px;
+  background-color: hsla(173, 4%, 57%, 0.657);
+}
+
+.main_container:hover {
+  background-color: hsla(173, 4%, 57%, 0.865);
 }
