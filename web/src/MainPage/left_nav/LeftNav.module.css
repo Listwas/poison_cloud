@@ -1,18 +1,31 @@
-.left_nav {
+.left_list {
   max-width: 25vw;
-  min-height: 40vh;
+  border-radius: 0px 0px 5px 5px;
+  background-color: hsla(101, 25%, 17%, 0.451);
 }
 
 nav {
   display: flex;
   flex-flow: column nowrap;
-  padding: 3%;
+  margin-left: 4vw;
+  max-width: 60%;
 }
 
 a {
-  padding: 3%;
+  min-width: 10vw;
+  padding: 10px;
+  margin: -5% 0% 15%;
+  font-size: 1.4rem;
+  text-align: center;
+  text-decoration: solid;
+  border-radius: 7px;
+  color: black;
+  background-color: rgba(81, 255, 0, 0.453);
 }
-
+a:hover {
+  color: hsl(0, 0%, 0%);
+  background-color: rgba(30, 255, 0, 0.764);
+}
 .used_space {
   min-height: 30vh;
   padding: 6%;

@@ -3,7 +3,7 @@ import styles from "./LeftNav.module.css";
 function LeftNav() {
   return (
     <>
-      <div className={styles.left_nav}>
+      <div className={styles.left_list}>
         <nav>
           <a href="url">my disk</a>
           <a href="url">public files</a>
