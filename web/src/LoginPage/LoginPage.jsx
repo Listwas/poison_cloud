@@ -8,7 +8,7 @@ function LoginPage() {
     if (showRegister) {
         return (
             <>
-                <RegisterPage />
+                <RegisterPage returnToLogin={() => setShowRegister(false)} />
             </>
         );
     }
@@ -25,7 +25,7 @@ function LoginPage() {
                 <input type="text" className={styles.logInput} id="login" placeholder="login"/><br/>
                 <input type="text" className={styles.logInput}  id="passwd" placeholder="passwd"/><br/>
                 <input type="button" className={styles.logInput} id="submit" value="Register" onClick={changeShowRegister}/>
-                <input type="button" className={styles.logInput} id="submit" value="Login" onClick={changeShowRegister}/>
+                <input type="button" className={styles.logInput} id="submit" value="Login" onClick={login}/>
             </form>
         </div>
         </>

@@ -1,19 +1,10 @@
 import styles from "./RegisterPage.module.css";
 import { useState, useRef } from "react";
 
-function RegisterPage() {
-    const [showLogin, setShowLogin] = useState(false);
+function RegisterPage({ returnToLogin }) {
+    const register = () => {
 
-    if (showLogin) {
-        return (
-            <>
-                <LoginPage />
-            </>
-        );
-    }
-
-    const changeShowLogin= () => {
-        setShowLogin(true);
+        returnToLogin();
     };
 
 
@@ -26,8 +17,8 @@ function RegisterPage() {
                 <input type="text" className={styles.logInput} id="surname" placeholder="Surname"/><br/>
                 <input type="text" className={styles.logInput} id="login" placeholder="Login"/><br/>
                 <input type="text" className={styles.logInput} id="passwd" placeholder="Password"/><br/>
-                <input type="button" className={styles.logInput} id="submit" value="go to login" onClick={changeShowLogin}/>
-                <input type="button" className={styles.logInput} id="submit" value="Register" onClick=""/>
+                <input type="button" className={styles.logInput} id="submit" value="go to login" onClick={returnToLogin}/>
+                <input type="button" className={styles.logInput} id="submit" value="Register" onClick={register}/>
             </form>
         </div>
         </>
