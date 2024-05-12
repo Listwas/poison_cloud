@@ -1,17 +1,17 @@
 import "./App.css";
+import MainPage from "./MainPage/MainPage";
+
 function App() {
   if (true) {
-    return (
-      <div id="main_container">
-        <LoginPage />
-      </div>
-    );
+    <>
+      <LoginPage />
+    </>;
   }
 
   return (
-    <div id="main_container">
+    <>
       <MainPage />
-    </div>
+    </>
   );
 }
 
