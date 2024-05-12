@@ -1,3 +1,31 @@
+#centring {
+  display: flex;
+  flex-flow: column wrap;
+  align-items: center;
+}
+
 .main_container {
-  border: 1px solid red;
+  max-width: 30vw;
+  margin: 3% 0 0;
+  color: hsl(0, 0%, 0%);
+}
+.user {
+  border-radius: 5px;
+  padding: 5px;
+  color: hsl(99, 100%, 50%);
+  background-color: hsla(122, 100%, 50%, 0.205);
+}
+.search_bar input {
+  font-size: 1.4rem;
+  min-width: 40vw;
+  min-height: 5vh;
+  margin: 1% 0 0;
+  padding-left: 5%;
+  border: 2px solid hsla(122, 100%, 50%, 0.875);
+  border-radius: 8px;
+  background-color: hsla(122, 100%, 50%, 0.337);
+}
+
+input:focus {
+  outline: none;
 }

@@ -6,8 +6,7 @@
 }
 
 #main_container {
+  float: left;
   min-width: 60vw;
   min-height: 15vw;
-  float: left;
-  border: 1px solid green;
 }
