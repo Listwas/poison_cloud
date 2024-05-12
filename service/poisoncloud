@@ -1,0 +1,272 @@
+#!/usr/bin/python3
+# Poison Cloud HTTP service
+
+from http.server import BaseHTTPRequestHandler, HTTPServer
+from http import HTTPStatus
+from typing import Optional
+import functools
+import argparse
+import json
+import time
+import os
+
+
+__version__ = "0.1"
+START_TIME = time.time()
+API_VERSION = 1
+
+
+def load_file(path: str) -> Optional[str]:
+    """Read the whole file at `path` and return the contents or None."""
+    if not os.path.exists(path):
+        return
+    with open(path, "r") as f:
+        return f.read()
+
+
+def log(*args):
+    """Print a message with a timestamp to stdout."""
+
+    msg = " ".join(str(x) for x in args)
+    dt = time.time() - START_TIME
+    print(f"[{dt: 8.2f}] {msg}")
+
+
+def json_bytes(blob) -> bytes:
+    """Turn a JSON blob into a bytes."""
+    return bytes(json.dumps(blob), "utf8")
+
+
+class Users:
+    """Allows access to users."""
+
+    users: dict
+    keys: dict
+
+    def __init__(self, userlist_path: str):
+        self.userlist_path = userlist_path
+        self.users = {}
+        self.keys = {}
+
+        userlist = load_file(userlist_path)
+        if not userlist:
+            return
+
+        self.users = json.loads(userlist)
+        log(f"Loaded {len(self.users)} user(s)")
+
+    @staticmethod
+    def generate_session_key() -> str:
+        """Generate a 32-character hex key."""
+        key = ""
+        with open("/dev/random", "rb") as f:
+            bs = f.read(16)
+        for b in bs:
+            key += f"{hex(b)[2:]:02}"
+        return key
+
+    def active_users(self) -> list:
+        """Get active user list."""
+        return list(self.users.keys())
+
+    def authenticate(self, username: str, passwd: str) -> Optional[str]:
+        """Returns a new session key if user exists and password hash matches."""
+        if username in self.users:
+            if self.users[username]["passwd"] == passwd:
+                self.keys[username] = self.generate_session_key()
+                return self.keys[username]
+        return
+
+    def save(self):
+        with open(self.userlist_path, "w") as f:
+            json.dump(f)
+
+
+class Service(BaseHTTPRequestHandler):
+    """The poisoncloud service."""
+
+    def __init__(self, users, *args, **kwargs):
+        self.users = users
+        self.endpoints_get = {
+            "/": self.get_index,
+            "/ping": self.get_ping,
+            "/endpoints": self.get_endpoints,
+            "/active_users": self.get_active_users,
+        }
+
+        self.endpoints_post = {
+            "/user/login": self.post_user_login,
+        }
+
+        super().__init__(*args, **kwargs)
+
+    def reply(self, status: int, blob: dict):
+        """Generic JSON reply."""
+
+        self.send_response(status)
+        self.send_header("Content-Type", "application/json")
+        self.send_header("Access-Control-Allow-Origin", "*")
+        self.end_headers()
+
+        if not blob:
+            blob = {}
+        blob["status"] = status
+
+        self.wfile.write(json_bytes(blob))
+
+    def reply_ok(self, blob: dict):
+        """Generic JSON reply. The JSON blob will get merged with the status field."""
+
+        self.reply(HTTPStatus.OK, blob)
+
+    def reply_bad_request(self):
+        """Send a reply_bad_request response (no such endpoint)."""
+
+        self.send_response(HTTPStatus.BAD_REQUEST)
+        self.send_header("Content-Type", "application/json")
+        self.end_headers()
+
+        self.wfile.write(
+            json_bytes({"status": HTTPStatus.BAD_REQUEST, "error": "no such endpoint"})
+        )
+
+    def generic_endpoint_handler(self, endpoint_list: dict, *args, **kwargs):
+        """Offer a generic endpoint handler."""
+
+        path = self.path
+        if "?" in path:
+            path = path.split("?", 1)[0]
+
+        if path in endpoint_list:
+            if not args:
+                endpoint_list[path]()
+            else:
+                endpoint_list[path](*args, **kwargs)
+            return
+
+        self.reply_bad_request()
+
+    # GET handler & endpoints
+
+    def do_GET(self):
+        """Handle GET requests."""
+        self.generic_endpoint_handler(self.endpoints_get)
+
+    def get_index(self) -> dict:
+        """/. Index message."""
+        self.reply_ok(
+            {
+                "message": "see /ping for service information & /endpoints for "
+                "a list of endpoints."
+            }
+        )
+
+    def get_ping(self) -> dict:
+        """/ping. Replies with a "pong" message."""
+        self.reply_ok(
+            {
+                "message": "pong",
+                "service_name": "poisoncloud",
+                "service_version": __version__,
+                "api_version": API_VERSION,
+            }
+        )
+
+    def get_endpoints(self) -> dict:
+        """/endpoints. Lists all endpoints."""
+        self.reply_ok(
+            {
+                "GET": list(self.endpoints_get.keys()),
+                "POST": list(self.endpoints_post.keys()),
+            }
+        )
+
+    def get_active_users(self) -> dict:
+        """/active_users. Get a list of active, currently logged on users."""
+        self.reply_ok({"users": self.users.active_users()})
+
+    # POST handler & requests
+
+    def do_POST(self):
+        """Handle POST requests."""
+
+        if "Content-Length" not in self.headers:
+            return self.reply(
+                HTTPStatus.LENGTH_REQUIRED, {"error": "missing Content-Length header"}
+            )
+
+        try:
+            content = self.rfile.read(int(self.headers["Content-Length"]))
+            rq = json.loads(str(content, "utf8"))
+        except json.JSONDecodeError:
+            return self.reply(
+                HTTPStatus.BAD_REQUEST, {"error": "invalid request format"}
+            )
+
+        self.generic_endpoint_handler(self.endpoints_post, rq)
+
+    def post_user_login(self, rq: dict):
+        """/user/login."""
+
+        res = self.ensure_fields(rq, {"username": str, "passwd": str})
+        if not res:
+            return self.reply(HTTPStatus.BAD_REQUEST, {"error": "malformed request"})
+
+        session_key = self.users.authenticate(rq["username"], rq["passwd"])
+        if not session_key:
+            return self.reply(
+                HTTPStatus.UNAUTHORIZED, {"error": "bad username or password"}
+            )
+
+        return self.reply_ok({"message": "user authorized", "session_key": session_key})
+
+    @staticmethod
+    def ensure_fields(rq: dict, fields: dict) -> bool:
+        """Returns true if all fields can be found in the request."""
+        for field_name, type_ in fields.items():
+            if field_name not in rq:
+                return False
+            if not isinstance(rq[field_name], type_):
+                return False
+
+        return True
+
+    # Non-functional stuff
+
+    def log_message(self, format, *args):
+        log(f"\033[90m{format % args}\033[0m")
+
+    def do_HEAD(self):
+        self.reply_bad_request()
+
+    def do_PUT(self):
+        self.reply_bad_request()
+
+
+def main():
+    parser = argparse.ArgumentParser(description="Poison Cloud HTTP service.")
+    parser.add_argument(
+        "-v", "--version", action="store_true", help="show the version and exit"
+    )
+
+    parser.add_argument("host", help="interface IP address to use")
+    parser.add_argument("port", type=int, help="port to host on")
+
+    args = parser.parse_args()
+
+    if args.version:
+        print(f"poisoncloud {__version__}")
+        return
+
+    server_cls = functools.partial(Service, Users("users.json"))
+    server = HTTPServer((args.host, args.port), server_cls)
+    try:
+        log(f"Starting server on {args.host}:{args.port}")
+        server.serve_forever()
+    except KeyboardInterrupt:
+        pass
+
+    server.server_close()
+
+
+main()
