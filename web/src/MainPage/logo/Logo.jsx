@@ -1,5 +1,5 @@
 import styles from "./Logo.module.css";
-import logo from "../../../public/logo.png";
+import logo from "/logo.png";
 function Logo() {
   return (
     <figure>
