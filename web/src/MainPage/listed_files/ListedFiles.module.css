@@ -8,7 +8,3 @@
   border-radius: 15px;
   background-color: hsla(173, 4%, 57%, 0.657);
 }
-
-.main_container:hover {
-  background-color: hsla(173, 4%, 57%, 0.865);
-}

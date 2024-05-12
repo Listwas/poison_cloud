@@ -12,3 +12,6 @@
   margin-top: -20%;
   font-size: 2rem;
 }
+ul {
+  list-style-type: none;
+}
