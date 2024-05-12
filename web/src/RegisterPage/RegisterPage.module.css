@@ -1,7 +1,7 @@
 .logForm {
     padding-top: 10%;   
 }
-.contLogin {
+.contReg {
     margin-left:38vw;
     margin-top: 18vh;
     text-align: center;
@@ -11,8 +11,8 @@
     box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     border-radius: 5px;
     border-color: #5eff1f;
-    min-width: 280px;
-    min-height: 220px;
+    min-width: 320px;
+    min-height: 280px;
     
 }
 
