@@ -1,5 +1,14 @@
 .left_nav {
   max-width: 25vw;
   min-height: 60vh;
-  border: 1px solid red;
+}
+
+nav {
+  display: flex;
+  flex-flow: column nowrap;
+  padding: 3%;
+}
+
+a {
+  padding: 3%;
 }

@@ -2,11 +2,14 @@
   float: left;
   min-width: 25vw;
   min-height: 98vh;
-  border: 1px dashed blue;
 }
 
 #main_container {
   float: left;
   min-width: 60vw;
   min-height: 15vw;
+}
+
+#right_container {
+  float: left;
 }
