@@ -6,8 +6,8 @@
 
 .main_container {
   max-width: 30vw;
-  margin: 3% 0 0;
-  color: hsl(0, 0%, 0%);
+  margin: 4vh 0px 0px 0px;
+  color: white;
 }
 .user {
   border-radius: 5px;
@@ -16,14 +16,14 @@
   background-color: hsla(122, 100%, 50%, 0.205);
 }
 .search_bar input {
-  font-size: 1.4rem;
+  font-size: 1.5rem;
   min-width: 40vw;
   min-height: 5vh;
   margin: 1% 0 0;
   padding-left: 5%;
-  border: 2px solid hsla(122, 100%, 50%, 0.875);
+  border: 3px solid #13ac41;
   border-radius: 8px;
-  background-color: hsla(122, 100%, 50%, 0.337);
+  background-color: #00ff4cc6;
 }
 
 input:focus {

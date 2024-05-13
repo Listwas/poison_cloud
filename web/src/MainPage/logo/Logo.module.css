@@ -2,10 +2,10 @@ figure {
   margin: 0px;
   border-radius: 5px 5px 0px 0px;
 
-  background-color: hsla(101, 25%, 17%, 0.451);
+  background-color: #555;
 }
 
 img {
-  margin: 0% 30% 0%; /*top 0 left and right 30% down 0 */
+  margin: 0% 33% 0%; /*top 0 left and right 30% down 0 */
   max-height: 15vh;
 }

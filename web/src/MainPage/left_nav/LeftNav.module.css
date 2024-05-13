@@ -1,7 +1,7 @@
 .left_list {
   max-width: 25vw;
   border-radius: 0px 0px 5px 5px;
-  background-color: hsla(101, 25%, 17%, 0.451);
+  background-color: #555;
 }
 
 nav {
@@ -20,7 +20,8 @@ a {
   text-decoration: solid;
   border-radius: 8px;
   color: black;
-  background-color: rgba(81, 255, 0, 0.453);
+  background-color: #13ac41;
+  color: white;
 }
 a:hover {
   color: hsl(0, 0%, 0%);
@@ -31,10 +32,11 @@ a:hover {
   align-items: center;
   justify-content: center;
   flex-flow: column wrap;
+  max-width: 70%;
   padding: 6%;
-  margin: 3% 0% 0% 0%;
+  margin: 8px 0px 0px 40px;
   border-radius: 8px;
-  background-color: hsla(0, 100%, 50%, 0.119);
+  background-color: #555;
 }
 .trash_can {
   margin: 0px;
