@@ -12,7 +12,7 @@ function App() {
       <>
         <LoginPage setLoginPage={setLoginPage}/>
       </>
-    )  ;
+    );
   }
 
   return (
