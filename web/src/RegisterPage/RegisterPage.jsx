@@ -7,33 +7,32 @@ function RegisterPage({ returnToLogin }) {
     const passwdRef = useRef();
     const passwdChkRef = useRef();
 
-    const passwd = passwdRef.current.value
-    const login = loginRef.current.value
-    const name = nameRef.current.value
+    const passwd = passwdRef.current.value;
+    const login = loginRef.current.value;
+    const name = nameRef.current.value;
 
     function registerUser() {
-        requestPost("/v1/user/register", {"name": name, "username": login, "passwd": passwd}, registerred)
+        requestPost("/v1/user/register", {"name": name, "username": login, "passwd": passwd}, registerred);
+    }
+
+    function registerred(response) {
+        console.log(response);
+        if (response.status == 200) {
+            alert('pomyslnie utworzono uzytkownika');
+            returnToLogin();
+        } else {
+            alert('nie udalo sie utworzyc uzytkownika (byc moze juz taki istnieje)');
+        }
     }
 
     function handleSubmit() {
         if ((passwdRef.current.value != passwdChkRef.current.value) && (passwd != null && login != null && name != null)) {
-            alert('Podane hasla nie sa takie same!')
-            return
+            alert('Podane hasla nie sa takie same!');
+            return;
         }
-
-        //registerUser()
-
-        function registerred(response) {
-            console.log(response)
-            if (response.status == 200) {
-                alert('pomyslnie utworzono uzytkownika')
-                returnToLogin()
-            } else {
-                alert('nie udalo sie utworzyc uzytkownika (byc moze juz taki istnieje)')
-            }
-        } 
-
-              
+        
+        registerUser();               
+    
     }
 
     return (

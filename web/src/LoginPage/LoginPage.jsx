@@ -5,10 +5,10 @@ import { requestPost } from "../lib/server";
 import { useCookies } from 'react-cookie';
 
 function LoginPage({ setLoginPage }) {
-    const loginRef = useRef() 
-    const passwdRef = useRef() 
+    const loginRef = useRef();
+    const passwdRef = useRef();
     const [showRegister, setShowRegister] = useState(false);
-    const [cookies, setCookie] = useCookies(["sessionKey"])
+    const [cookies, setCookie] = useCookies(["sessionKey"]);
 
     if (showRegister) {
         return (
@@ -23,20 +23,20 @@ function LoginPage({ setLoginPage }) {
     }
 
     function loggedIn(response) {
-        console.log(response)
+        console.log(response);
         if (response.status == 200) {
-            alert("Pomyslnie zalogowano")
-            setCookie("sessionKey", response.session_key, {path: "/"})
+            alert("Pomyslnie zalogowano");
+            setCookie("sessionKey", response.session_key, {path: "/"});
             setLoginPage(false);
         }   else {
-            alert("Nie udalo sie zalogowac!")
+            alert("Nie udalo sie zalogowac!");
         }
     }
 
     function loginUser() {
-        const passwd = passwdRef.current.value
-        const login = loginRef.current.value
-        requestPost("/v1/user/login", {"username": login, "passwd": passwd}, loggedIn)
+        const passwd = passwdRef.current.value;
+        const login = loginRef.current.value;
+        requestPost("/v1/user/login", {"username": login, "passwd": passwd}, loggedIn);
     }
 
     return (
@@ -51,7 +51,7 @@ function LoginPage({ setLoginPage }) {
             </form>
         </div>
         </>
-    ) ;
+    );
 }
 
 export default LoginPage;
