@@ -1,14 +1,18 @@
 import styles from "./SearchBar.module.css";
 import { useEffect, useState } from "react";
 import { requestGet } from "../../lib/server";
-
+import { useCookies } from "react-cookie";
 function SearchBar() {
   const [userDetails, setUserDetails] = useState([]);
-
+  const [cookie, setCookie] = useCookies(["sessionKey"]);
   useEffect(() => {
-    requestGet("/v1/user_details", (res) => {
-      setUserDetails(res.username);
-    });
+    requestGet(
+      "/v1/user_details",
+      (res) => {
+        setUserDetails(res.username);
+      },
+      cookie["sessionKey"]
+    );
   }, []);
 
   return (

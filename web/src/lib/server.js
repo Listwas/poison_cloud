@@ -14,39 +14,39 @@
 //  });
 //
 
-export async function requestGet(endpoint, result_consumer) {
-    let res = null;
+export async function requestGet(endpoint, resultConsumer, sessionKey) {
+  let res = null;
 
-    try {
-        res = await fetch("http://192.168.1.21:7708" + endpoint, {
-            method: "GET",
-            headers: {
-                "Authorization": "Bearer 4c9cdbcba9603a60a569e0c7723287b3"
-            }
-        });
-    } catch (err) {
-        console.log("failed to send request", err);
-        return result_consumer(null);
-    }
+  try {
+    res = await fetch("http://192.168.1.21:7708" + endpoint, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${sessionKey}`,
+      },
+    });
+  } catch (err) {
+    console.log("failed to send request", err);
+    return resultConsumer(null);
+  }
 
-    result_consumer(await res.json());
+  resultConsumer(await res.json());
 }
 
-export async function requestPost(endpoint, data, result_consumer) {
-    let res = null;
+export async function requestPost(endpoint, data, resultConsumer, sessionKey) {
+  let res = null;
 
-    try {
-        res = await fetch("http://192.168.1.21:7708" + endpoint, {
-            method: "POST",
-            headers: {
-                "Authorization": "Bearer 4c9cdbcba9603a60a569e0c7723287b3"
-            },
-            body: JSON.stringify(data)
-        });
-    } catch (err) {
-        console.log("failed to send request", err);
-        return result_consumer(null);
-    }
+  try {
+    res = await fetch("http://192.168.1.21:7708" + endpoint, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${sessionKey}`,
+      },
+      body: JSON.stringify(data),
+    });
+  } catch (err) {
+    console.log("failed to send request", err);
+    return resultConsumer(null);
+  }
 
-    result_consumer(await res.json());
+  resultConsumer(await res.json());
 }
