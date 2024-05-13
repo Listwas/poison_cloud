@@ -7,17 +7,17 @@ function RegisterPage({ returnToLogin }) {
     const passwdRef = useRef();
     const passwdChkRef = useRef();
 
-    const handleSubmit = () => {
+    function handleSubmit() {
         if (passwdRef.current.value != passwdChkRef.current.value) {
             alert('Podane hasla nie sa takie same!')
             return
         }
 
         //TODO: request to a server
-        
+
         alert('pomyslnie utworzono uzytkownika')
         returnToLogin()       
-    };
+    }
 
     return (
         <>

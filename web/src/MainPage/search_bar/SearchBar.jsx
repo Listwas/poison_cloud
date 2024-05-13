@@ -1,12 +1,12 @@
 import styles from "./SearchBar.module.css";
 import { useEffect, useState } from "react";
-import { request } from "../../lib/server";
+import { requestGet } from "../../lib/server";
 
 function SearchBar() {
   const [userDetails, setUserDetails] = useState([]);
 
   useEffect(() => {
-    request("GET", "/v1/user_details", (res) => {
+    requestGet("/v1/user_details", (res) => {
       setUserDetails(res.username);
     });
   }, []);
