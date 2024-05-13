@@ -40,7 +40,7 @@
     border: 3px solid #555;
 }
 
-.logInput[type=button] {
+.logInput[type=button], .logInput[type=submit] {
     border: 3px solid #555;
     color: black;
     width: 30%;

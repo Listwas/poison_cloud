@@ -19,13 +19,14 @@ export async function requestGet(endpoint, result_consumer) {
 
     try {
         res = await fetch("http://192.168.1.21:7708" + endpoint, {
-            method: method,
+            method: "GET",
             headers: {
                 "Authorization": "Bearer 4c9cdbcba9603a60a569e0c7723287b3"
             }
         });
     } catch (err) {
-        return;
+        console.log("failed to send request", err);
+        return result_consumer(null);
     }
 
     result_consumer(await res.json());
@@ -36,14 +37,15 @@ export async function requestPost(endpoint, data, result_consumer) {
 
     try {
         res = await fetch("http://192.168.1.21:7708" + endpoint, {
-            method: method,
+            method: "POST",
             headers: {
                 "Authorization": "Bearer 4c9cdbcba9603a60a569e0c7723287b3"
             },
             body: JSON.stringify(data)
         });
     } catch (err) {
-        return;
+        console.log("failed to send request", err);
+        return result_consumer(null);
     }
 
     result_consumer(await res.json());

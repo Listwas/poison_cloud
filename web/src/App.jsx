@@ -1,12 +1,16 @@
 import "./App.css";
 import MainPage from "./MainPage/MainPage";
+import { useState} from "react";
 import LoginPage from "./LoginPage/LoginPage";
 
 function App() {
-  if (true) {
+
+  const [loginPage, setLoginPage] = useState(true);
+
+  if (loginPage) {
     return(
       <>
-        <LoginPage />
+        <LoginPage setLoginPage={setLoginPage}/>
       </>
     )  ;
   }
