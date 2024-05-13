@@ -42,7 +42,7 @@ function LoginPage({ setLoginPage }) {
     return (
         <>
         <div className={styles.contLogin}>
-            <form className={styles.logForm}>
+            <form className={styles.logForm} onSubmit={(e) => {e.preventDefault()}}>
                 <h2 className={styles.logH2}><b>Login</b></h2><br/>
                 <input type="text" className={styles.logInput} id="login" ref={loginRef} placeholder="Login"/><br/>
                 <input type="password" className={styles.logInput}  id="passwd" ref={passwdRef} placeholder="Passwd"/><br/>
