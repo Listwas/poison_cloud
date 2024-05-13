@@ -1,12 +1,12 @@
 import styles from "./UserList.module.css";
 import { useEffect, useState } from "react";
-import { request } from "../../lib/server";
+import { requestGet } from "../../lib/server";
 
 function UserList() {
     const [users, setUsers] = useState([]);
 
     useEffect(() => {
-        request("GET", "/v1/active_users", (res) => {
+        requestGet("/v1/active_users", (res) => {
             setUsers(res.users);
         });
     }, []);
