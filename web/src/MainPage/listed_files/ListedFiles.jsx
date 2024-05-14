@@ -6,6 +6,7 @@ import { useCookies } from "react-cookie";
 
 function ListedFiles() {
   const [dirs, setDirs] = useState([]);
+  const [files, setFiles] = useState([]);
   const [cookie, setCookie] = useCookies(["sessionKey"]);
 
   useEffect(() => {
@@ -13,6 +14,7 @@ function ListedFiles() {
       "/v1/files/list",
       (res) => {
         setDirs(res.dirs);
+        setFiles(res.files);
       },
       cookie["sessionKey"]
     );
@@ -41,16 +43,31 @@ function ListedFiles() {
 
   return (
     <>
-      <div className={styles.main_container} {...getRootProps()}>
-        <h1>your files: </h1>
-        <input className={styles.input_zone} {...getInputProps()} />
-        <ul>
-          {folders.map((dir) => (
-            <li key={dir}>
-              <a href="url">{dir}</a>
-            </li>
-          ))}
-        </ul>
+      <div className={styles.main_container}>
+        <div className={styles.top_container}>
+          <p className={styles.paragraph}>your files:</p>
+
+          <div className={styles.button_style} {...getRootProps()}>
+            <input {...getInputProps()} />
+            <p>drop</p>
+          </div>
+        </div>
+        <div className={styles.file_list}>
+          <ul>
+            {folders.map((dir) => (
+              <li className={styles.file_list_stylization} key={dir}>
+                <span class="material-symbols-outlined">folder</span>
+                {dir}
+              </li>
+            ))}
+            {files.map((file) => (
+              <li className={styles.file_list_stylization} key={file}>
+                <span class="material-symbols-outlined">draft</span>
+                {file}
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     </>
   );
