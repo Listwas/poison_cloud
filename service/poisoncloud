@@ -4,14 +4,16 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from http import HTTPStatus
 from typing import Optional
+from urllib.parse import urlparse
 import functools
 import argparse
+import pathlib
 import json
 import time
 import os
 
 
-__version__ = "0.1"
+__version__ = "0.2"
 START_TIME = time.time()
 API_VERSION = 1
 
@@ -37,6 +39,37 @@ def json_bytes(blob) -> bytes:
     return bytes(json.dumps(blob), "utf8")
 
 
+class User:
+    """Represents a single user."""
+
+    def __init__(self, username: str, passwd: str):
+        self.username = username
+        self.passwd = passwd
+
+    def files_list(self, path: str) -> Optional[dict]:
+        """Returns a list of files and directories in a {"files": [ ... ],
+        "dirs": [ ... ]} map, otherwise returns None if fails or path is invalid."""
+
+        check_path = pathlib.Path(path)
+        if ".." in check_path.parts or "." in check_path.parts:
+            return
+
+        path = pathlib.Path(f"files/{self.username}/" + path)
+        if not path.is_dir():
+            return
+
+        files = []
+        dirs = []
+
+        for file in path.iterdir():
+            if file.is_dir():
+                dirs.append(file.name)
+            if file.is_file():
+                files.append(file.name)
+
+        return {"files": files, "dirs": dirs}
+
+
 class Users:
     """Allows access to users."""
 
@@ -46,13 +79,16 @@ class Users:
     def __init__(self, userlist_path: str):
         self.userlist_path = userlist_path
         self.users = {}
-        self.keys = {}
+        self.keys = {"test": "bc2ee117f2fb901fe0af62d2952161aa"}
 
         userlist = load_file(userlist_path)
         if not userlist:
             return
 
-        self.users = json.loads(userlist)
+        users = json.loads(userlist)
+        for username, info in users.items():
+            self.users[username] = User(username, info["passwd"])
+
         log(f"Loaded {len(self.users)} user(s)")
 
     @staticmethod
@@ -69,13 +105,30 @@ class Users:
         """Get active user list."""
         return list(self.users.keys())
 
+    def get_user_by_session_key(self, session_key: str) -> User:
+        """Returns the user object."""
+        for user, key in self.keys.items():
+            if key == session_key:
+                return self.users[user]
+
+    def is_valid_session_key(self, session_key: str) -> bool:
+        """Returns True if the given session_key is correct, and matches
+        a currently logged-on user."""
+        return session_key in self.keys.values()
+
     def authenticate(self, username: str, passwd: str) -> Optional[str]:
         """Returns a new session key if user exists and password hash matches."""
         if username in self.users:
-            if self.users[username]["passwd"] == passwd:
+            if self.users[username].passwd == passwd:
                 self.keys[username] = self.generate_session_key()
                 return self.keys[username]
         return
+
+    def logout(self, session_key: str):
+        """Log-out the user, based on the session_key."""
+        if self.is_valid_session_key(session_key):
+            # TODO: remove session key from self.keys
+            pass
 
     def save(self):
         with open(self.userlist_path, "w") as f:
@@ -85,17 +138,22 @@ class Users:
 class Service(BaseHTTPRequestHandler):
     """The poisoncloud service."""
 
+    users: Users
+
     def __init__(self, users, *args, **kwargs):
         self.users = users
         self.endpoints_get = {
             "/": self.get_index,
             "/ping": self.get_ping,
             "/endpoints": self.get_endpoints,
-            "/active_users": self.get_active_users,
+            "/v1/active_users": self.get_active_users,
+            "/v1/user_details": self.get_user_details,
+            "/v1/files/list": self.get_files_list,
         }
 
         self.endpoints_post = {
-            "/user/login": self.post_user_login,
+            "/v1/user/login": self.post_user_login,
+            "/v1/user/logoff": self.post_user_logoff,
         }
 
         super().__init__(*args, **kwargs)
@@ -130,12 +188,41 @@ class Service(BaseHTTPRequestHandler):
             json_bytes({"status": HTTPStatus.BAD_REQUEST, "error": "no such endpoint"})
         )
 
+    def check_session_key(self) -> Optional[str]:
+        """Returns the session key if found in HTTP headers, otherwise returns None."""
+
+        if "Authorization" not in self.headers:
+            return
+
+        auth = self.headers["Authorization"]
+        if not auth.startswith("Bearer "):
+            return
+
+        auth = auth.removeprefix("Bearer ")
+        if self.users.is_valid_session_key(auth):
+            return auth
+
+    def request_owner(self) -> Optional[User]:
+        """Returns the owner of the request, returns None if authorization is missing
+        or the session key is invalid."""
+
+        skey = self.check_session_key()
+        if not skey:
+            return self.reply(
+                HTTPStatus.UNAUTHORIZED, {"error": "authentication required"}
+            )
+
+        user = self.users.get_user_by_session_key(skey)
+        if not user:
+            return self.reply(HTTPStatus.FORBIDDEN, {"error": "invalid session key"})
+
+        return user
+
     def generic_endpoint_handler(self, endpoint_list: dict, *args, **kwargs):
         """Offer a generic endpoint handler."""
 
-        path = self.path
-        if "?" in path:
-            path = path.split("?", 1)[0]
+        url = urlparse(self.path)
+        path = url.path
 
         if path in endpoint_list:
             if not args:
@@ -181,9 +268,35 @@ class Service(BaseHTTPRequestHandler):
             }
         )
 
-    def get_active_users(self) -> dict:
-        """/active_users. Get a list of active, currently logged on users."""
+    def get_active_users(self):
+        """/v1/active_users. Get a list of active, currently logged on users."""
+
+        if not self.check_session_key():
+            return self.reply(
+                HTTPStatus.UNAUTHORIZED, {"error": "authentication required"}
+            )
+
         self.reply_ok({"users": self.users.active_users()})
+
+    def get_user_details(self):
+        """/v1/user_details. Returns details of the currently logged-in user."""
+
+        if not (user := self.request_owner()):
+            return
+
+        return self.reply_ok({"username": user.username, "name": "?"})
+
+    def get_files_list(self):
+        """/v1/files/list. List all files in the given directory."""
+
+        if not (user := self.request_owner()):
+            return
+
+        files = user.files_list("/")
+        if not files:
+            return self.reply(HTTPStatus.FORBIDDEN, {"error": "bad path"})
+
+        self.reply_ok(files)
 
     # POST handler & requests
 
@@ -206,7 +319,7 @@ class Service(BaseHTTPRequestHandler):
         self.generic_endpoint_handler(self.endpoints_post, rq)
 
     def post_user_login(self, rq: dict):
-        """/user/login."""
+        """/v1/user/login."""
 
         res = self.ensure_fields(rq, {"username": str, "passwd": str})
         if not res:
@@ -219,6 +332,14 @@ class Service(BaseHTTPRequestHandler):
             )
 
         return self.reply_ok({"message": "user authorized", "session_key": session_key})
+
+    def post_user_logoff(self, rq: dict):
+        """/v1/user/logoff."""
+
+        if not self.check_session_key():
+            return self.reply(
+                HTTPStatus.UNAUTHORIZED, {"error": "authentication required"}
+            )
 
     @staticmethod
     def ensure_fields(rq: dict, fields: dict) -> bool:
