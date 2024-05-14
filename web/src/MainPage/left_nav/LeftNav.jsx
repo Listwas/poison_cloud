@@ -4,7 +4,7 @@ function LeftNav() {
   return (
     <>
       <div className={styles.left_list}>
-        <nav>
+        <nav className={styles.buttons}>
           <a href="url">my disk</a>
           <a href="url">public files</a>
           <a href="url">favourited</a>

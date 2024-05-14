@@ -11,7 +11,8 @@ nav {
   max-width: 60%;
 }
 
-a {
+.buttons a,
+.trash_can {
   min-width: 10vw;
   padding: 10px;
   margin: -5% 0% 12% 10%;
@@ -23,7 +24,7 @@ a {
   background-color: #13ac41;
   color: white;
 }
-a:hover {
+.buttons a:hover {
   color: hsl(0, 0%, 0%);
   background-color: rgba(30, 255, 0, 0.764);
 }
