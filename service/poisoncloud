@@ -236,6 +236,26 @@ class Service(BaseHTTPRequestHandler):
     def log_message(self, format, *args):
         log(f"\033[90m{format % args}\033[0m")
 
+    def do_OPTIONS(self):
+        """Respond to OPTIONS requests."""
+
+        self.send_response(HTTPStatus.OK)
+        self.send_header("Allow", "GET, POST, OPTIONS")
+
+        if "Origin" in self.headers:
+            self.send_header("Access-Control-Allow-Origin", self.headers["Origin"])
+
+        if "Access-Control-Request-Method" in self.headers:
+            self.send_header("Access-Control-Allow-Method", "GET, POST, OPTIONS")
+
+        if "Access-Control-Request-Headers" in self.headers:
+            self.send_header(
+                "Access-Control-Allow-Headers",
+                self.headers["Access-Control-Request-Headers"],
+            )
+
+        self.end_headers()
+
     def do_HEAD(self):
         self.reply_bad_request()
 
